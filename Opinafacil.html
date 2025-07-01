@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OpinaFácil</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to bottom, #000000, #1e3a8a);
+    color: #fff;
+  }
+  .container {
+    max-width: 900px;
+    margin: auto;
+    padding: 30px 20px;
+  }
+  h1 {
+    font-size: 2.8rem;
+    color: #3b82f6;
+    text-align: center;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.6);
+  }
+  h2 {
+    font-size: 1.7rem;
+    color: #60a5fa;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  p {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    text-align: center;
+    color: #f1f1f1;
+  }
+  .hidden {
+    display: none;
+  }
+  input, select, button {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    color: #000;
+  }
+  button {
+    background: #2563eb;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+  button:hover {
+    background: #1e3a8a;
+  }
+  .alerta {
+    background: #ffcc00;
+    color: #111;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
+  }
+  .progress {
+    height: 20px;
+    background: #eee;
+    border-radius: 10px;
+    margin: 20px 0;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: #22c55e;
+    width: 0%;
+    transition: 0.3s;
+  }
+  .money-bar-container {
+    margin-top: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #22c55e;
+    text-align: center;
+  }
+  .pix-box {
+    background: #f0f6ff;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 20px;
+    border: 2px solid #2563eb;
+    color: #000;
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.4);
+    position: relative;
+  }
+  .pix-box h3 {
+    margin-bottom: 15px;
+    color: #2563eb;
+  }
+  .img-banner, .img-produto {
+    width: 100%;
+    margin: 20px 0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    object-fit: cover;
+  }
+  label {
+    margin-top: 15px;
+    display: block;
+    font-weight: bold;
+    color: #000;
+  }
+
+  /* Modal overlay */
+  #modalTaxa {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 20px;
+    display: none;
+  }
+  #modalTaxa .modal-content {
+    background: #1e3a8a;
+    padding: 30px 25px;
+    border-radius: 16px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 0 15px #2563eb;
+    position: relative;
+  }
+  #modalTaxa h2 {
+    margin-bottom: 20px;
+    color: #a5d8ff;
+  }
+  #modalTaxa p {
+    font-size: 1.15rem;
+    margin-bottom: 25px;
+  }
+  #modalTaxa button {
+    width: 140px;
+    margin: 0 10px;
+    font-size: 1rem;
+  }
+
+  /* Loader (spinner) */
+  .loader {
+    margin: 0 auto 15px auto;
+    border: 5px solid #cbd5e1;
+    border-top: 5px solid #2563eb;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    0% {transform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
+  }
+
+</style>
+</head>
+<body>
+  <div class="container">
+    <div id="explicacao">
+      <h1>Bem‑vindo ao OpinaFácil</h1>
+      <h2>Ganhe R$50 respondendo pesquisas reais</h2>
+      <img src="https://images.unsplash.com/photo-1605379399642-870262d3d051?auto=format&fit=crop&w=1000&q=80" alt="Profissional pesquisando" class="img-banner" />
+      <p><strong>✔ Plataforma reconhecida;</strong> <strong>✔ Marcas conhecidas;</strong> <strong>✔ Pagamento via PIX;</strong></p>
+      <p><strong>✔ Totalmente gratuito;</strong> <strong>✔ Seguro e verificado;</strong></p>
+      <button onclick="mostrarCadastro()">Próximo</button>
+    </div>
+
+    <div id="cadastro" class="hidden">
+      <h2>Cadastro</h2>
+      <input type="text" id="nome" placeholder="Nome completo" required />
+      <input type="text" id="cpf" placeholder="CPF (apenas números)" required />
+      <button onclick="validarCadastro()">Começar pesquisa</button>
+      <div class="alerta">⚠️ Se suas credenciais estiverem erradas, não será possível fazer o pagamento.</div>
+    </div>
+
+    <div id="pesquisa" class="hidden">
+      <h2>Pesquisa por Produto</h2>
+      <div id="perguntasContainer">
+        <h3 id="nomeProduto"></h3>
+        <img id="imgProduto" alt="Produto" class="img-produto" />
+      </div>
+
+      <label for="nota">Nota (1 a 10):</label>
+      <select id="nota" required>
+        <option value="">Escolha</option>
+        <option>1</option><option>2</option><option>3</option><option>4</option>
+        <option>5</option><option>6</option><option>7</option><option>8</option>
+        <option>9</option><option>10</option>
+      </select>
+
+      <label for="indicaria">Indicaria para um amigo?</label>
+      <select id="indicaria" required>
+        <option value="">Escolha</option><option>Sim</option><option>Não</option>
+      </select>
+
+      <label for="comentam">Comentam sobre ele onde você mora?</label>
+      <select id="comentam" required>
+        <option value="">Escolha</option><option>Sim</option><option>Não</option>
+      </select>
+
+      <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="money-bar-container" id="moneyBarText">Ganhos: R$0</div>
+
+      <button id="btnResponder">Responder próxima</button>
+    </div>
+  </div>
+
+  <!-- Modal da taxa -->
+  <div id="modalTaxa">
+    <div class="modal-content">
+      <h2>Taxa de saque</h2>
+      <p>Para continuar, você deve pagar uma taxa de <strong>R$20</strong>.</p>
+      <p><strong>Chave PIX:</strong><br>opinafaciltaxas@gmail.com</p>
+      <button id="btnJaPaguei">Já paguei</button>
+      <button id="btnCancelar">Cancelar</button>
+
+      <div id="confirmando" class="hidden">
+        <div class="loader"></div>
+        <p>Confirmando...</p>
+      </div>
+
+      <div id="pagamentoConfirmado" class="hidden" style="margin-top: 15px; color: #22c55e; font-weight: bold; font-size: 1.2rem;">
+        Pagamento confirmado! Você pode continuar.
+      </div>
+    </div>
+  </div>
+
+<script>
+  const explicacao = document.getElementById('explicacao');
+  const cadastro = document.getElementById('cadastro');
+  const pesquisa = document.getElementById('pesquisa');
+
+  const produtos = [
+    { nome: 'Burger King', img: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80' },
+    { nome: 'Colgate Tripla Ação', img: '' },
+    { nome: 'Shampoo Pantene', img: '' },
+    { nome: 'Desodorante Axe', img: '' },
+    { nome: 'Coca‑Cola', img: '' },
+    { nome: 'Trakinas', img: '' },
+    { nome: 'Sabonete Dove', img: '' },
+    { nome: 'Doritos', img: '' },
+    { nome: 'Leite Ninho', img: '' },
+    { nome: 'Omo', img: '' }
+  ];
+
+  let index = 0;
+  let ganhos = 0;
+  let taxaPaga = false;
+
+  function mostrarCadastro() {
+    explicacao.classList.add('hidden');
+    cadastro.classList.remove('hidden');
+  }
+
+  function validarCadastro() {
+    const nome = document.getElementById('nome').value.trim();
+    const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
+
+    if (nome.length < 3) {
+      alert('Por favor, informe um nome válido.');
+      return;
+    }
+    if (cpf.length !== 11) {
+      alert('CPF inválido. Informe 11 números.');
+      return;
+    }
+
+    cadastro.classList.add('hidden');
+    pesquisa.classList.remove('hidden');
+    index = 0;
+    ganhos = 0;
+    taxaPaga = false;
+    atualizarBarra();
+    montarPergunta();
+  }
+
+  function montarPergunta() {
+    if(index >= produtos.length) {
+      alert('Você completou todas as pesquisas! Parabéns!');
+      return;
+    }
+    const produto = produtos[index];
+    document.getElementById('nomeProduto').textContent = `${index + 1}. ${produto.nome}`;
+    const imgElem = document.getElementById('imgProduto');
+    if (produto.img) {
+      imgElem.src = produto.img;
+      imgElem.style.display = 'block';
+    } else {
+      imgElem.style.display = 'none';
+    }
+
+    // Limpar respostas antigas
+    document.getElementById('nota').value = '';
+    document.getElementById('indicaria').value = '';
+    document.getElementById('comentam').value = '';
+  }
+
+  function atualizarBarra() {
+    const progressPercent = (index / produtos.length) * 100;
+    document.getElementById('progressBar').style.width = progressPercent + '%';
+    document.getElementById('moneyBarText').textContent = `Ganhos: R$${ganhos.toFixed(2)}`;
+  }
+
+  document.getElementById('btnResponder').addEventListener('click', () => {
+    // Validar respostas
+    const nota = document.getElementById('nota').value;
+    const indicaria = document.getElementById('indicaria').value;
+    const comentam = document.getElementById('comentam').value;
+
+    if (!nota || !indicaria || !comentam) {
+      alert('Por favor, preencha todas as respostas.');
+      return;
+    }
+
+    // Se chegar na metade (5ª pesquisa) e ainda não pagou taxa, mostra modal taxa
+    if (index === 5 && !taxaPaga) {
+      abrirModalTaxa();
+      return;
+    }
+
+    // Incrementa ganhos e index só se taxa paga ou antes da 5ª pergunta
+    if (index < produtos.length) {
+      ganhos += 4; // Cada pergunta vale R$4 para bater R$40 na metade
+      index++;
+      atualizarBarra();
+      if(index >= produtos.length) {
+        alert('Parabéns! Você concluiu todas as pesquisas!');
+      } else {
+        montarPergunta();
+      }
+    }
+  });
+
+  // Modal controle
+  const modalTaxa = document.getElementById('modalTaxa');
+  const btnJaPaguei = document.getElementById('btnJaPaguei');
+  const btnCancelar = document.getElementById('btnCancelar');
+  const confirmando = document.getElementById('confirmando');
+  const pagamentoConfirmado = document.getElementById('pagamentoConfirmado');
+
+  function abrirModalTaxa() {
+    modalTaxa.style.display = 'flex';
+    confirmando.classList.add('hidden');
+    pagamentoConfirmado.classList.add('hidden');
+    btnJaPaguei.style.display = 'inline-block';
+    btnCancelar.style.display = 'inline-block';
+  }
+
+  btnCancelar.onclick = () => {
+    modalTaxa.style.display = 'none';
+  };
+
+  btnJaPaguei.onclick = () => {
+    // Esconde os botões e mostra loader
+    btnJaPaguei.style.display = 'none';
+    btnCancelar.style.display = 'none';
+    confirmando.classList.remove('hidden');
+
+    // Simula confirmação 3 segundos
+    setTimeout(() => {
+      confirmando.classList.add('hidden');
+      pagamentoConfirmado.classList.remove('hidden');
+      taxaPaga = true;
+
+      // Fecha modal após 2 seg e permite continuar respondendo
+      setTimeout(() => {
+        modalTaxa.style.display = 'none';
+        // Ao fechar modal, já incrementa a resposta atual (pq só bloqueava aqui)
+        ganhos += 4;
+        index++;
+        atualizarBarra();
+        montarPergunta();
+      }, 2000);
+    }, 3000);
+  };
+</script>
+</body>
+</html>
